@@ -7,11 +7,11 @@ public class ChessGame {
 
     private final ChessBoard board;
     private boolean isFinished;
-    private PieceColor currentPlayer;
+    private Color currentPlayer;
 
     public ChessGame(){
         board = new ChessBoard();
-        currentPlayer = PieceColor.White;
+        currentPlayer = Color.WHITE;
         isFinished = false;
     }
 
@@ -20,10 +20,10 @@ public class ChessGame {
      */
     public boolean playMove(Tuple from, Tuple to){
         if(isValidMove(from, to, false)) {
-            Tile fromTile = board.getBoardArray()[from.Y()][from.X()];
+            Tile fromTile = board.getBoardArray()[from.getY()][from.getX()];
             ChessPiece pieceToMove = fromTile.getPiece();
 
-            Tile toTile = board.getBoardArray()[to.Y()][to.X()];
+            Tile toTile = board.getBoardArray()[to.getY()][to.getX()];
             toTile.setPiece(pieceToMove);
 
             fromTile.empty();
@@ -49,14 +49,14 @@ public class ChessGame {
     }
 
     private void endTurn(){
-        currentPlayer = (currentPlayer == PieceColor.White)
-            ? PieceColor.Black
-            : PieceColor.White;
+        currentPlayer = (currentPlayer == Color.WHITE)
+            ? Color.BLACK
+            : Color.WHITE;
     }
 
     // Function that checks if any piece can prevent check for the given color
     // This includes whether the King can move out of check himself.
-    private boolean isCheckPreventable(PieceColor color){
+    private boolean isCheckPreventable(Color color){
         boolean canPreventCheck = false;
         Tuple[] locations = board.getAllPiecesLocationForColor(color);
 
@@ -90,18 +90,18 @@ public class ChessGame {
         return canPreventCheck;
     }
 
-    private boolean isColorCheckMate(PieceColor color){
+    private boolean isColorCheckMate(Color color){
         if(!isKingCheck(color)) return false;//if not check, then we're not mate
         return !isCheckPreventable(color);
     }
 
-    private boolean isKingCheck(PieceColor kingColor){
+    private boolean isKingCheck(Color kingColor){
         Tuple kingLocation = board.getKingLocation(kingColor);
         return canOpponentTakeLocation(kingLocation, kingColor);
     }
 
-    private boolean canOpponentTakeLocation(Tuple location, PieceColor color){
-        PieceColor opponentColor = ChessPiece.opponent(color);
+    private boolean canOpponentTakeLocation(Tuple location, Color color){
+        Color opponentColor = ChessPiece.opponent(color);
         Tuple[] piecesLocation = board.getAllPiecesLocationForColor(opponentColor);
 
         for(Tuple fromTuple: piecesLocation) {
@@ -175,8 +175,8 @@ public class ChessGame {
 
         for(Move move: moves){
             for(int i = 1; i < 7; i++){
-                int newX = currentLocation.X() + move.x * i;
-                int newY = currentLocation.Y() + move.y * i;
+                int newX = currentLocation.getX() + move.moveToXCoordinate * i;
+                int newY = currentLocation.getY() + move.moveToYCoordinate * i;
                 if (newX < 0 || newX > 7 || newY < 0 || newY > 7) break;
 
                 Tuple toLocation = new Tuple(newX, newY);
@@ -198,10 +198,10 @@ public class ChessGame {
         ArrayList<Tuple> possibleMoves = new ArrayList<>();
 
         for(Move move: moves){
-            int currentX = currentLocation.X();
-            int currentY = currentLocation.Y();
-            int newX = currentX + move.x;
-            int newY = currentY + move.y;
+            int currentX = currentLocation.getX();
+            int currentY = currentLocation.getY();
+            int newX = currentX + move.moveToXCoordinate;
+            int newY = currentY + move.moveToYCoordinate;
             if (newX < 0 || newX > 7 || newY < 0 || newY > 7) continue;
             Tuple newLocation = new Tuple(newX,newY);
             if (isValidMoveForPiece(currentLocation, newLocation)) possibleMoves.add(newLocation);
@@ -224,18 +224,19 @@ public class ChessGame {
         ChessPiece fromPiece = board.getTileFromTuple(from).getPiece();
         Move[] validMoves = fromPiece.getMoves();
 
-        int xMove = to.X() - from.X();
-        int yMove = to.Y() - from.Y();
+        int xMove = to.getX() - from.getX();
+        int yMove = to.getY() - from.getY();
 
         for(int i = 1; i <= 7; i++){
             for(Move move : validMoves) {
 
                 //generally check for possible move
-                if (move.x * i == xMove && move.y * i == yMove) {
+                if (move.moveToXCoordinate * i == xMove && move.moveToYCoordinate * i == yMove) {
 
                     //if move is generally valid - check if path is valid up till i
                     for (int j = 1; j <= i; j++){
-                        Tile tile = board.getTileFromTuple(new Tuple(from.X() + move.x * j, from.Y() +move.y * j));
+                        Tile tile = board.getTileFromTuple(new Tuple(from.getX() + move.moveToXCoordinate * j,
+                                from.getY() +move.moveToYCoordinate * j));
                         //if passing through non empty tile return false
                         if (j != i && !tile.isEmpty())
                             return false;
@@ -256,11 +257,11 @@ public class ChessGame {
         Move[] validMoves = fromPiece.getMoves();
         Tile toTile = board.getTileFromTuple(to);
 
-        int xMove = to.X() - from.X();
-        int yMove = to.Y() - from.Y();
+        int xMove = to.getX() - from.getX();
+        int yMove = to.getY() - from.getY();
 
         for (Move move : validMoves) {
-            if (move.x == xMove && move.y == yMove) {
+            if (move.moveToXCoordinate == xMove && move.moveToYCoordinate == yMove) {
                 if (move.onTakeOnly){//if move is only legal on take (pawns)
                     if (toTile.isEmpty()) return false;
 
@@ -281,13 +282,13 @@ public class ChessGame {
     // Determine wheter the Pawn at 'from' on 'board' has moved yet.
     public boolean isFirstMoveForPawn(Tuple from, ChessBoard board){
         Tile tile = board.getTileFromTuple(from);
-        if (tile.isEmpty() || tile.getPiece().getPieceType() != PieceType.Pawn) {
+        if (tile.isEmpty() || tile.getPiece().getPieceType() != PieceType.PAWN) {
             return false;
         } else {
-            PieceColor color = tile.getPiece().getColor();
-            return (color == PieceColor.White)
-                ? from.Y() == 6
-                : from.Y() == 1;
+            Color color = tile.getPiece().getColor();
+            return (color == Color.WHITE)
+                ? from.getY() == 6
+                : from.getY() == 1;
         }
     }
 }
