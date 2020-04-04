@@ -4,17 +4,13 @@ package Chess;
 public class Tile {
 
     private ChessPiece piece;
-    private final TileColor color;
+    private final Color color;
 
-    public enum TileColor{
-        WHITE, BLACK
-    }
-
-    public Tile(TileColor color){
+    public Tile(Color color){
         this.color = color;
     }
 
-    public Tile(TileColor color, ChessPiece piece){
+    public Tile(Color color, ChessPiece piece){
         this(color)
         setPiece(piece)
     }
