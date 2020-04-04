@@ -7,7 +7,7 @@ public class Tile {
     private final TileColor color;
 
     public enum TileColor{
-        White, Black
+        WHITE, BLACK
     }
 
     public Tile(TileColor color){
@@ -15,19 +15,21 @@ public class Tile {
     }
 
     public Tile(TileColor color, ChessPiece piece){
-        this.color = color;
-        this.piece = piece;
+        this(color)
+        setPiece(piece)
     }
 
     public void setPiece(ChessPiece piece){
-        this.piece = piece;
+        if(piece != null) {
+            this.piece = piece;
+        }
     }
 
     public ChessPiece getPiece(){
         return this.piece;
     }
 
-    public String getValue(){
+    public String toString(){
         if(piece != null){
             return "[" + piece.getCharValue() + "]";
         } else {
