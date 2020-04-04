@@ -4,20 +4,20 @@ package Chess;
  * Used to store an int/int pair to map to tiles on the chessboard.
  */
 public class Tuple {
-    private final int x;
-    private final int y;
+    private final int xAxis;
+    private final int yAxis;
 
     public Tuple(int x, int y){
-            this.x = x;
-            this.y =y;
+            this.xAxis = x;
+            this.yAxis =y;
     }
 
-    public int X(){
-        return x;
+    public int getX(){
+        return xAxis;
     }
 
-    public int Y(){
-        return y;
+    public int getY(){
+        return yAxis;
     }
 
 }
