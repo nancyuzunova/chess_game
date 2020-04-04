@@ -5,8 +5,8 @@ import Chess.Move;
 
 public class Rook extends ChessPiece {
 
-	public Rook(PieceColor color){
-		super(PieceType.Rook, color, validMoves(), true);
+	public Rook(Color color){
+		super(PieceType.ROOK, color, validMoves(), true);
 	}
 
 

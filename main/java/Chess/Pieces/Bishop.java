@@ -5,8 +5,8 @@ import Chess.Move;
 
 public class Bishop extends ChessPiece {
 
-	public Bishop(PieceColor color){
-		super(PieceType.Bishop, color, validMoves(), true);
+	public Bishop(Color color){
+		super(PieceType.BISHOP, color, validMoves(), true);
 	}
 
 

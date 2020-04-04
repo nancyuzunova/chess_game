@@ -5,8 +5,8 @@ import Chess.Move;
 
 public class King extends ChessPiece{
 
-	public King(ChessPiece.PieceColor color){
-		super(PieceType.King, color, validMoves(), false);
+	public King(Color color){
+		super(PieceType.KING, color, validMoves(), false);
 	}
 
 	private static Move[] validMoves(){

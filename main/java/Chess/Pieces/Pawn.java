@@ -5,8 +5,8 @@ import Chess.Move;
 
 public class Pawn extends ChessPiece {
 
-	public Pawn(PieceColor color){
-		super(PieceType.Pawn, color, validMoves(color), false);
+	public Pawn(Color color){
+		super(PieceType.PAWN, color, validMoves(color), false);
 	}
 
 	private static Move[] validMoves(PieceColor color){
